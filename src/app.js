@@ -1,21 +1,18 @@
 import express from "express";
+import postRouter from "./routers/post";
 
 const app = express();
 
+
+// Middleware tích hợp để parse JSON: req.body
+app.use(express.json());
+
 app.get("/", (req, res) => {
-  const name = req.query.name || "Guest";
-  const a = Number(req.query.a);
-  const b = Number(req.query.b);
-
-  let message = `Hello, ${name}!`;
-
-  if (!isNaN(a) && !isNaN(b)) {
-    message += `\nSum of ${a} and ${b} is ${a + b}`;
-  }
-
-  res.send(message);
+  res.send("chao moi nguoi");
 });
 
+app.use("/posts", postRouter)
+
 app.listen(3000, () => {
-  console.log(" http://localhost:3000/?name=Ken&a=2&b=3");
+  console.log(" http://localhost:3000");
 });
