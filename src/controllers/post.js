@@ -1,15 +1,57 @@
-let Posts = [
-    { id: 1, title: "lap top", content: "gygabyte" },
-    { id: 2, title: "dien thoai", content: "iphone" },
-    { id: 3, title: "dien thoai 2", content: "redminote 11pro" },
-    { id: 4, title: "Bai viet 4", content: "Noi dung bai viet 4" },
-];
+import Post from "../models/post";
 
-export function getPosts(req, res) {
-    res.json(posts);
-};
+export async function getPosts(req, res) {
+    try {
+        const posts = await Post.find();
+        return res.json(posts);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+}
 
-export function getPostById() {}
-export function addPost() {}
-export function updatePost() {}
-export function deletePost() {}
+export async function getPostById(req, res) {
+    try {
+        const { id } = req.params;
+        const post = await Post.findById(id);
+        if (!post) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+        return res.json(post);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+}
+export async function addPost(req , res) {
+    try {
+        const newPost = await Post.create(req.body);
+        return res.status(201).json(newPost);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+}
+
+export async function updatePost(req, res) {
+    try {
+        const { id } = req.params;
+        const updatedPost = await Post.findByIdAndUpdate(id, req.body, { new: true });
+        if (!updatedPost) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+        return res.json(updatedPost);
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+}
+export async function deletePost(req, res) {
+    try {
+        const { id } = req.params;
+        const deletedPost = await Post.findByIdAndDelete(id);
+        if (!deletedPost) {
+            return res.status(404).json({ message: "Post not found" });
+        }
+        return res.json({ message: "Post deleted successfully" });
+    } catch (error) {
+        return res.status(400).json({ message: error.message });
+    }   
+}
+
