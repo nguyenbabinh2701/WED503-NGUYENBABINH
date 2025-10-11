@@ -1,6 +1,7 @@
 import express from "express";
-import postRouter from "./routers/post";
+import postRouter from "./routers/post.js";
 import mongoose from "mongoose";
+import userRouter from "./routers/userRouters.js";
 
 mongoose
   .connect("mongodb://localhost:27017/nodejs")
@@ -17,7 +18,17 @@ app.get("/", (req, res) => {
 });
 
 app.use("/posts", postRouter)
+app.use("/api/users", userRouter), async (req, res) => {
+  const userExists = await User.findOne({ email: req.body.email });
 
+  if (userExists) {
+    return res.status(400).json({ message: "Email already exists" });
+  }
+  req.body.password = await bcrypt.hash(req.body.password, 10);
+
+  const newUser = await User.create(req.body);
+  res.status(201).json(newUser);
+}
 
 
 
