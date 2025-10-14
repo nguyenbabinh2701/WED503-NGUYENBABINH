@@ -1,4 +1,4 @@
-import e from "express";
+
 import Author from "../models/Author";
 
 export async function getAuthors(req, res) {
@@ -6,7 +6,7 @@ export async function getAuthors(req, res) {
         const authors = await Author.find();
         return res.json(authors);
     } catch (error) {
-        return res.status(400).json({ message: error.message });
+        return res.status(400).json({ message: error.message });    
     }
 }
 
